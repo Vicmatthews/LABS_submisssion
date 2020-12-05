@@ -1,0 +1,45 @@
+#Lab | Aggregation Revisited - Sub queries
+-- Select the first name, last name, and email address of all the customers who have rented a movie.
+Select c.first_name, c.last_name, c.email
+FROM sakila.customer c
+join sakila.rental r
+using (customer_id)
+group by c.email;
+
+-- What is the average payment made by each customer (display the customer id, customer name (concatenated), and the average payment made).
+Select customer_id, concat(first_name, ' ',last_name) as name, avg(p.amount)
+FROM sakila.customer c
+join sakila.payment p
+using (customer_id)
+group by c.customer_id;
+
+-- Select the name and email address of all the customers who have rented the "Action" movies.
+-- Write the query using multiple join statements
+Select name, concat(c.first_name, ' ',c.last_name) as customer_name, c.email
+FROM sakila.customer c
+join sakila.rental r
+using (customer_id)
+join sakila.inventory i
+using (inventory_id)
+join sakila.film_category fm 
+using (film_id)
+join sakila.category ct
+using (category_id)
+where name = 'Action'
+group by c.email;
+
+-- Write the query using sub queries with multiple WHERE clause and IN condition
+
+
+
+-- Use the case statement to create a new column classifying existing columns as either or high value 
+-- transactions based on the amount of payment. If the amount is between 0 and 2, label should be low and 
+-- if the amount is between 2 and 4, the label should be medium, and if it is more than 4, then it should be high.
+
+select * ,
+CASE
+	  WHEN amount between 0 and 2 THEN 'low'
+      WHEN amount between 2 and 4 THEN 'medium'
+    ELSE 'high'
+END as customer_rating
+from sakila.payment;
