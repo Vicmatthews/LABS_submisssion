@@ -1,0 +1,35 @@
+#LAB SQL 5
+select * from sakila.staff;
+#Drop column picture from staff.
+alter table sakila.staff drop column picture;
+
+#A new person is hired to help Jon. Her name is TAMMY SANDERS, and she is a customer. Update the database accordingly.
+INSERT INTO sakila.staff (staff_id, first_name, last_name, address_id,email, store_id, username)
+values (3, 'Tammy', "Sanders", 79, 2, 'Tammy');
+
+update sakila.staff set district_name ='shonenberg';
+#Add rental for movie "Academy Dinosaur" by Charlotte Hunter from Mike Hillyer at Store 1 today.
+use sakila;
+select * from inventory where film_id=1 and store_id=1;
+select * from customer where first_name = 'Charlotte';
+select * from staff where first_name = 'mike';
+select *from rental;
+insert into rental (inventory_id, customer_id,staff_id)
+values (1,130,1);
+select *from rental where customer_id=130 and inventory_id =1;
+
+#Delete non-active users, but first, create a backup table deleted_users to store customer_id, email, and the date the user was deleted.
+select*from customer;
+create table backup_customer as select * from customer;
+drop table backup_customer;
+
+CREATE TABLE deleted_users (
+deleted_users_id int NOT NULL AUTO_INCREMENT,
+customer_id int NOT NULL,
+email varchar(50),
+date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY (deleted_users_id));
+INSERT INTO deleted_users (customer_id, email)
+SELECT customer_id, email FROM customer
+WHERE active = 0;
+SELECT * FROM deleted_users;
